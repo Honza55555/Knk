@@ -101,14 +101,13 @@ def webhook():
     return "OK"
 
 if __name__ == "__main__":
-    # nastavíme webhook u Telegramu
-    bot_app.job_queue.run_once(
-        lambda _: bot_app.bot.set_webhook(f"{BASE_URL}/{BOT_TOKEN}"),
-        when=0
-    )
-    # spustíme PTB ve webhook modu
     bot_app.run_webhook(
         listen="0.0.0.0",
         port=PORT,
-        url_path=BOT_TOKEN
+        # cesta, na které Telegram pošle POSTy
+        url_path=BOT_TOKEN,
+        # vlastní webhook URL, kam Telegram webhook nastaví
+        webhook_url=f"{BASE_URL}/{BOT_TOKEN}",
+        # zahodí nevyřízené updety při startu
+        drop_pending_updates=True,
     )
